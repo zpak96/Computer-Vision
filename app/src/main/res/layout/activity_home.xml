@@ -12,52 +12,104 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="bottom"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/effect1"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Greyscale" />
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/leftColumn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:orientation="vertical"
+                android:weightSum="5">
+
+                <Button
+                    android:id="@+id/effect1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Greyscale"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <Button
+                    android:id="@+id/effect2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gaussian Blur"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <Button
+                    android:id="@+id/effect3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Laplacian"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rightColumn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/effect5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pyrdown"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <Button
+                    android:id="@+id/effect6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Edge Detection"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+                <Button
+                    android:id="@+id/effect4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Scharr"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <Button
-            android:id="@+id/effect2"
+            android:id="@+id/effect7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Gaussian Blur" />
-
-        <Button
-            android:id="@+id/effect3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Laplacian" />
-
-        <Button
-            android:id="@+id/effect4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scharr" />
-
-        <Button
-            android:id="@+id/effect5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pyrdown" />
-
-        <Button
-            android:id="@+id/effect6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edge Detection" />
+            android:layout_marginBottom="24dp"
+            android:text="Face Detection"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="230dp" />
 
         <Button
             android:id="@+id/default_camera"
             android:layout_width="match_parent"
-            android:layout_height="121dp"
-            android:text="Default Camera" />
+            android:layout_height="78dp"
+            android:layout_marginBottom="24dp"
+            android:text="Default Camera"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="230dp" />
+
     </LinearLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/Centerline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="189dp" />
+
 </android.support.constraint.ConstraintLayout>

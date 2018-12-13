@@ -1,5 +1,6 @@
 package com.dev.c418.zpak.compvision_1;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -19,8 +20,16 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 
 public class MainActivity_show_camera extends AppCompatActivity implements CvCameraViewListener2 {
@@ -30,6 +39,9 @@ public class MainActivity_show_camera extends AppCompatActivity implements CvCam
 
     //this is for loading the camera view of OpenCV
     private CameraBridgeViewBase mOpenCvCameraView;
+
+    CascadeClassifier cascadeClassifier;
+    int absoluteFaceSize;
 
     // for camera selection, like switching front or face cam
     private boolean mIsJavaCamera = true;
@@ -76,6 +88,36 @@ public class MainActivity_show_camera extends AppCompatActivity implements CvCam
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
+    private void initializeOpenCVDependencies() {
+
+        try {
+            InputStream face_input = getResources().openRawResource(R.raw.haarcascade_frontalface_alt);
+            File cascadeDir = getDir("cascades", Context.MODE_PRIVATE);
+            File faceCascadeFile = new File(cascadeDir, "haarcascade_frontalface_alt.xml");
+            FileOutputStream face_output = new FileOutputStream(faceCascadeFile);
+
+
+            byte[] faceBuffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = face_input.read(faceBuffer)) != -1){
+                face_output.write(faceBuffer, 0, bytesRead);
+            }
+
+
+            face_input.close();
+            face_output.close();
+
+            cascadeClassifier = new CascadeClassifier(faceCascadeFile.getAbsolutePath());
+
+        } catch (Exception e) {
+            Log.e("MainActivity", "Error loading cascade", e);
+        }
+
+        //mOpenCvCameraView.enableView();
+
+    }
+
+
 
     @Override
     public void onResume(){
@@ -107,11 +149,32 @@ public class MainActivity_show_camera extends AppCompatActivity implements CvCam
         mRgba = new Mat(height, width, CvType.CV_8UC4);
         mRgbaF = new Mat(height, width, CvType.CV_8UC4);
         mRgbaT = new Mat(width, width, CvType.CV_8UC4);
+        absoluteFaceSize = (int) (height * 0.2);
     }
 
     @Override
     public void onCameraViewStopped() {
         mRgba.release();
+    }
+
+    public Mat faceDetection(Mat baseImage) {
+
+        initializeOpenCVDependencies();
+
+        Mat grayImage = new Mat();
+        Imgproc.cvtColor(baseImage, grayImage, Imgproc.COLOR_RGB2GRAY);
+
+        MatOfRect faces = new MatOfRect();
+
+        if (cascadeClassifier != null) {
+            cascadeClassifier.detectMultiScale(grayImage, faces, 1.1, 2, 2, new Size(absoluteFaceSize, absoluteFaceSize), new Size());
+        }
+
+        Rect[] facesArray = faces.toArray();
+        for (int i = 0; i < facesArray.length; i++) {
+            Imgproc.rectangle(baseImage, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 255, 255), 3);
+        }
+        return baseImage;
     }
 
     @Override
@@ -154,6 +217,9 @@ public class MainActivity_show_camera extends AppCompatActivity implements CvCam
                 Imgproc.cvtColor(baseImage, mRgba, Imgproc.COLOR_BGR2GRAY);
                 Imgproc.Canny(baseImage,mRgba,50,150, 3, false);
                 break;
+            case 7: // Face Detection
+                mRgba = faceDetection(baseImage);
+                break;
         }
 
         // correct orientation
@@ -161,6 +227,6 @@ public class MainActivity_show_camera extends AppCompatActivity implements CvCam
         Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
         Core.flip(mRgbaF, mRgba, 1 );
 
-        return mRgba; //this must return -- will correct screen alignment
+        return mRgba; //this must return
     }
 }

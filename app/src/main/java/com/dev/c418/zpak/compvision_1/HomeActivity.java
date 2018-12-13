@@ -28,6 +28,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         effect5.setOnClickListener(this);
         Button effect6 = findViewById(R.id.effect6);
         effect6.setOnClickListener(this);
+        Button effect7 = findViewById(R.id.effect7);
+        effect7.setOnClickListener(this);
         Button default_camera = findViewById(R.id.default_camera);
         default_camera.setOnClickListener(this);
 
@@ -57,6 +59,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.effect6:
                 callEffect(6);
+                break;
+            case R.id.effect7:
+                callEffect(7);
                 break;
         }
 
